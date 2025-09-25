@@ -1,0 +1,23 @@
+const chatbotFrame = document.getElementById("chatbot");
+    chatbotFrame.src = `https://api.openai.com/embeddings/chat-demo/chat.html?api_key=${apiKey}`;
+
+    const handleEvent = (event) => {
+        console.log(event);
+        const message = event.data.message;
+        const output = document.createElement("p");
+        output.innerHTML = `<strong>User:</strong> ${message}`;
+
+        const chatWindow = chatbotFrame.contentWindow;
+        chatWindow.postMessage({ message: message }, "*");
+
+        chatWindow.addEventListener("message", (event) => {
+            if (event.data.message) {
+                const output = document.createElement("p");
+                output.innerHTML = `<strong>AI:</strong> ${event.data.message}`;
+                document.body.appendChild(output);
+            }
+        });
+    };
+
+    window.addEventListener("message", handleEvent);
+</script>
